@@ -13,13 +13,17 @@ This bash script performs the following tasks in this order:
 6. Adds a virtual host record to the Apache vhosts conf file
 7. Creates a database and administrative user for the website
 
+## Installation & Setup
+
 ## Dependencies
 
 This script uses the Secure Delete utility to clean up temporary files.
 
 ## Usage
 
+## Argument List
+
 
 ## Tested
 
-Known to work on AWS EC2 instances with RDS or MySQL on localhost. 
+Known to work on AWS EC2 instances with RDS or MySQL on localhost.

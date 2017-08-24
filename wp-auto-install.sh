@@ -15,10 +15,6 @@ do
  in
  d) DOMAIN=${OPTARG};;
  a) SERVER_ALIAS=${OPTARG};;
- i) INSTALL_PATH=${OPTARG};;
- v) VHOST_FILE=${OPTARG};;
- h) DB_HOST=${OPTARG};;
- u) DB_ROOT_USR=$OPTARG;;
  esac
 done
 
