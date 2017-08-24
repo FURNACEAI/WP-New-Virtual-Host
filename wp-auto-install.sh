@@ -96,7 +96,7 @@ EOT
 # Run the above SQL file
 mysql -h $DB_HOST -u $DB_ROOT_USR -p < $SQL_FILE
 # Trash the SQL file with secure delete
-sudo srm "./$SQL_FILE"
+#sudo srm "./$SQL_FILE"
 
 # RESTART APACHE
 sudo apachectl restart
