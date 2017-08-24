@@ -25,7 +25,7 @@ WPSRC="wordpress"
 # GENERATE KEYS & DB VARS
 DOMAIN_LABEL=${DOMAIN//.}
 DB_NEW_NAME=${DOMAIN_LABEL:0:64}
-DB_NEW_USR="$DOMAIN_LABEL-admin"
+DB_NEW_USR="admin-$DOMAIN_LABEL"
 DB_NEW_USR=${DB_NEW_USR:0:16}
 DB_NEW_PWD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 
