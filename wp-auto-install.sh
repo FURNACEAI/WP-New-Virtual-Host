@@ -36,6 +36,7 @@ printf "VHOST: $VHOST_FILE \n"
 printf "DB HOST: $DB_HOST \n"
 printf "DB ROOT USER: $DB_ROOT_USR \n"
 printf "NEW DB USER: $DB_NEW_USR \n"
+printf "NEW DB NAME: $DB_NEW_NAME \n"
 printf "\n================================\n"
 printf "Wordpress will be installed in $INSTALL_DIR \n"
 printf "\n================================\n"
@@ -51,9 +52,9 @@ mv wordpress $INSTALL_PATH
 mv $INSTALL_PATH$WPSRC $INSTALL_DIR
 
 # UPDATE OWNERS AND PERMISSIONS
-sudo chown bitnami:daemon -R $INSTALL_DIR
-sudo find . -type d -exec chmod 755 {} \;  # Change directory permissions rwxr-xr-x
-sudo find . -type f -exec chmod 644 {} \;  # Change file permissions rw-r--r--
+chown bitnami:daemon -R $INSTALL_DIR
+find . -type d -exec chmod 755 {} \;  # Change directory permissions rwxr-xr-x
+find . -type f -exec chmod 644 {} \;  # Change file permissions rw-r--r--
 
 # CONFIGURE WORDPRESS
 mv $INSTALL_DIR/wp-config-sample.php $INSTALL_DIR/wp-config.php
@@ -88,8 +89,8 @@ EOT
 # Create a SQL file for creating new DB user and WP database. Grant the user all privilages on the db.
 cat <<EOT >> "./$SQL_FILE"
 CREATE USER '$DB_NEW_USR'@'$DB_HOST' IDENTIFIED BY '$DB_NEW_PWD';
-CREATE DATABASE `$DB_NEW_NAME`
-GRANT ALL PRIVILEGES ON `$DB_NEW_NAME`.* TO "$DB_NEW_USR"@"$DB_HOST";
+CREATE DATABASE \`$DB_NEW_NAME\`
+GRANT ALL PRIVILEGES ON \`$DB_NEW_NAME\`.* TO "$DB_NEW_USR"@"$DB_HOST";
 FLUSH PRIVILEGES;
 exit;
 EOT
@@ -100,6 +101,6 @@ mysql -h $DB_HOST -u $DB_ROOT_USR -p < $SQL_FILE
 sudo srm "./$SQL_FILE"
 
 # RESTART APACHE
-sudo apachectl restart
+apachectl restart
 
 printf "\n$DOMAIN is configured and ready for viewing.\n"
