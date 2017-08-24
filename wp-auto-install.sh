@@ -89,8 +89,8 @@ EOT
 # Create a SQL file for creating new DB user and WP database. Grant the user all privilages on the db.
 cat <<EOT >> "./$SQL_FILE"
 CREATE USER '$DB_NEW_USR'@'$DB_HOST' IDENTIFIED BY '$DB_NEW_PWD';
-CREATE DATABASE \`$DB_NEW_NAME\`
-GRANT ALL PRIVILEGES ON \`$DB_NEW_NAME\`.* TO "$DB_NEW_USR"@"$DB_HOST";
+CREATE DATABASE \`$DB_NEW_NAME\`;
+GRANT ALL PRIVILEGES ON \`$DB_NEW_NAME\`.* TO '$DB_NEW_USR'@'$DB_HOST';
 FLUSH PRIVILEGES;
 exit;
 EOT
