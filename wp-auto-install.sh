@@ -24,6 +24,7 @@ WPSRC="wordpress"
 
 # GENERATE KEYS & DB VARS
 DOMAIN_LABEL=${DOMAIN//.}
+DB_NEW_NAME=${DOMAIN_LABEL:0:64}
 DB_NEW_USR="$DOMAIN_LABEL-admin"
 DB_NEW_USR=${DB_NEW_USR:0:16}
 DB_NEW_PWD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
@@ -86,9 +87,9 @@ EOT
 
 # Create a SQL file for creating new DB user and WP database. Grant the user all privilages on the db.
 cat <<EOT >> "./$SQL_FILE"
-CREATE USER '$NEW_DB_USR'@'$DB_HOST' IDENTIFIED BY '$DB_NEW_PWD';
-CREATE DATABASE `$DOMAIN_LABEL`
-GRANT ALL PRIVILEGES ON `$DOMAIN_LABEL`.* TO "$NEW_DB_USR"@"$DB_HOST";
+CREATE USER '$DB_NEW_USR'@'$DB_HOST' IDENTIFIED BY '$DB_NEW_PWD';
+CREATE DATABASE `$DB_NEW_NAME`
+GRANT ALL PRIVILEGES ON `$DB_NEW_NAME`.* TO "$DB_NEW_USR"@"$DB_HOST";
 FLUSH PRIVILEGES;
 exit;
 EOT
