@@ -3,13 +3,13 @@
 # Load the config file
 . ./settings.conf
 
-# command -v srm >/dev/null 2>&1 || { echo >&2 "I require the Secure Delete utility but it's not installed. Aborting."; exit 1;
+# command -v srm >/dev/null 2>&1 || { printf >&2 "I require the Secure Delete utility but it's not installed. Aborting."; exit 1;
 if [[ $# -eq 0 ]] ; then
-    echo 'You must provide a domain name for this script to run.'
+    printf 'You must provide a domain name for this script to run.'
     exit 0
 fi
 
-while getopts d:a:i:v:h:u: option
+while getopts d:a: option
 do
  case "${option}"
  in
@@ -22,34 +22,25 @@ INSTALL_DIR=$INSTALL_PATH$DOMAIN
 SQL_FILE="tmp.sql"
 WPSRC="wordpress"
 
-echo "================================"
-echo ""
-echo "DOMAIN: $DOMAIN"
-echo "INSTALL PATH: $INSTALL_PATH"
-echo "VHOST: $VHOST_FILE"
-echo "DB HOST: $DB_HOST"
-echo "DB ROOT USER: $DB_ROOT_USR"
-echo ""
-echo "================================"
-echo ""
-echo "Wordpress will be installed in $INSTALL_DIR"
-echo ""
-echo "================================"
-echo ""
-echo "You Are running: "
-lsb_release -irc
-echo ""
-echo "================================"
-echo ""
-echo "DEBUGGING: "
-echo $INSTALL_PATH$WPSRC
-echo ""
-echo "================================"
-
-
 # GENERATE KEYS & DB VARS
 DOMAIN_LABEL=${DOMAIN//.}
+DB_NEW_USR="$DOMAIN_LABEL-admin" | cut -c1-16 # Trim username to 16 chars; the limit on MySQL usernames
 DB_NEW_PWD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+
+
+printf "================================\n\n"
+printf "DOMAIN: $DOMAIN \n"
+printf "INSTALL PATH: $INSTALL_PATH \n"
+printf "VHOST: $VHOST_FILE \n"
+printf "DB HOST: $DB_HOST \n"
+printf "DB ROOT USER: $DB_ROOT_USR \n"
+printf "NEW DB USER: $DB_NEW_USR \n"
+printf "\n================================\n"
+printf "Wordpress will be installed in $INSTALL_DIR \n"
+printf "\n================================\n"
+printf "You Are running: \n"
+lsb_release -irc
+printf "\n================================\n\n"
 
 # FETCH LATEST WORDPRESS
 wget https://wordpress.org/latest.tar.gz
@@ -67,7 +58,7 @@ sudo find . -type f -exec chmod 644 {} \;  # Change file permissions rw-r--r--
 mv $INSTALL_DIR/wp-config-sample.php $INSTALL_DIR/wp-config.php
 sed -i "/DB_HOST/s/'[^']*'/'$DB_HOST'/2" $INSTALL_DIR/wp-config.php
 sed -i "/DB_NAME/s/'[^']*'/'$DOMAIN_LABEL'/2" $INSTALL_DIR/wp-config.php
-sed -i "/DB_USER/s/'[^']*'/'$DOMAIN_LABEL-admin'/2" $INSTALL_DIR/wp-config.php
+sed -i "/DB_USER/s/'[^']*'/'$DB_NEW_USR'/2" $INSTALL_DIR/wp-config.php
 sed -i "/DB_PASSWORD/s/'[^']*'/'$DB_NEW_PWD'/2" $INSTALL_DIR/wp-config.php
 
 # ADD THE VIRTUAL HOST RECORD
@@ -95,19 +86,19 @@ EOT
 
 # Create a SQL file for creating new DB user and WP database. Grant the user all privilages on the db.
 cat <<EOT >> "./$SQL_FILE"
-CREATE USER '$DOMAIN_LABEL-admin'@'$DB_HOST' IDENTIFIED BY '$DB_NEW_PWD';
+CREATE USER '$NEW_DB_USR'@'$DB_HOST' IDENTIFIED BY '$DB_NEW_PWD';
 CREATE DATABASE `$DOMAIN_LABEL`
-GRANT ALL PRIVILEGES ON `$DOMAIN_LABEL`.* TO "$DOMAIN_LABEL-admin"@"$DB_HOST";
+GRANT ALL PRIVILEGES ON `$DOMAIN_LABEL`.* TO "NEW_DB_USR"@"$DB_HOST";
 FLUSH PRIVILEGES;
 exit;
 EOT
 
 # Run the above SQL file
-mysql -h $DB_HOST -u $DB_ROOT_USR -p$DB_ROOT_PWD < $SQL_FILE
+mysql -h $DB_HOST -u $DB_ROOT_USR -p < $SQL_FILE
 # Trash the SQL file with secure delete
 sudo srm "./$SQL_FILE"
 
 # RESTART APACHE
 sudo apachectl restart
 
-echo "$DOMAIN is configured and ready for viewing."
+printf "\n$DOMAIN is configured and ready for viewing.\n"
