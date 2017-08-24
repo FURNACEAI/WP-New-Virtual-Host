@@ -24,9 +24,9 @@ WPSRC="wordpress"
 
 # GENERATE KEYS & DB VARS
 DOMAIN_LABEL=${DOMAIN//.}
-DB_NEW_USR="$DOMAIN_LABEL-admin" | cut -c1-16 # Trim username to 16 chars; the limit on MySQL usernames
+DB_NEW_USR="$DOMAIN_LABEL-admin"
+DB_NEW_USR=${DB_NEW_USR:0:16}
 DB_NEW_PWD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
-
 
 printf "================================\n\n"
 printf "DOMAIN: $DOMAIN \n"
