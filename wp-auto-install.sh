@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Load the config file
-. ./.config
+. ./settings.conf
 
 # command -v srm >/dev/null 2>&1 || { echo >&2 "I require the Secure Delete utility but it's not installed. Aborting."; exit 1;
 if [[ $# -eq 0 ]] ; then
