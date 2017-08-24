@@ -1,5 +1,5 @@
-# WP-New-Virtual-Host
-The purpose of this bash script is to get a Wordpress instance up and running on an AWS EC2 instance as quickly as possible.
+# WP Auto Install
+The purpose of this bash script is to automate every aspect of getting a Wordpress instance up and running.
 
 ## What This Script Does
 
@@ -13,4 +13,13 @@ This bash script performs the following tasks in this order:
 6. Adds a virtual host record to the Apache vhosts conf file
 7. Creates a database and administrative user for the website
 
+## Dependencies
+
+This script uses the Secure Delete utility to clean up temporary files.
+
 ## Usage
+
+
+## Tested
+
+Known to work on AWS EC2 instances with RDS or MySQL on localhost. 
