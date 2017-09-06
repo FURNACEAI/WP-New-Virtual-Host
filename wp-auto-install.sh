@@ -52,8 +52,8 @@ mv wordpress $INSTALL_PATH
 mv $INSTALL_PATH$WPSRC $INSTALL_DIR
 
 # UPDATE OWNERS AND PERMISSIONS
-chown ROOT_DIR_OWNER:ROOT_DIR_GROUP -R $INSTALL_DIR
-chown WPCONTENT_DIR_GROUP:WPCONTENT_DIR_OWNER -R $INSTALL_DIR/wp-content/
+chown $ROOT_DIR_OWNER:$ROOT_DIR_GROUP -R $INSTALL_DIR
+chown $WPCONTENT_DIR_GROUP:$WPCONTENT_DIR_OWNER -R $INSTALL_DIR/wp-content/
 find . -type d -exec chmod 755 {} \;  # Change directory permissions rwxr-xr-x
 find . -type f -exec chmod 644 {} \;  # Change file permissions rw-r--r--
 
