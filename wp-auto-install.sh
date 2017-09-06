@@ -52,7 +52,8 @@ mv wordpress $INSTALL_PATH
 mv $INSTALL_PATH$WPSRC $INSTALL_DIR
 
 # UPDATE OWNERS AND PERMISSIONS
-chown bitnami:daemon -R $INSTALL_DIR
+chown ROOT_DIR_OWNER:ROOT_DIR_GROUP -R $INSTALL_DIR
+chown WPCONTENT_DIR_GROUP:WPCONTENT_DIR_OWNER -R $INSTALL_DIR/wp-content/
 find . -type d -exec chmod 755 {} \;  # Change directory permissions rwxr-xr-x
 find . -type f -exec chmod 644 {} \;  # Change file permissions rw-r--r--
 
@@ -75,11 +76,9 @@ cat <<EOT >> "$VHOST_FILE"
     ErrorLog "logs/$DOMAIN-error_log"
     CustomLog "logs/$DOMAIN-access_log" common
     <Directory "$INSTALL_DIR">
-        # AllowOverride All      # Deprecated
         # Order Allow,Deny       # Deprecated
         # Allow from all         # Deprecated
-
-        # --New way of doing it
+        AllowOverride All
         Require all granted
     </Directory>
 </VirtualHost>

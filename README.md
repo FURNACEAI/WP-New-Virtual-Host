@@ -24,6 +24,6 @@ This script uses the Secure Delete utility to clean up temporary files.
 ## Argument List
 
 
-## Tested
+## Tested on:
 
-Known to work on AWS EC2 instances with RDS or MySQL on localhost.
+Known to work on AWS EC2 instances running Ubuntu with RDS or MySQL on localhost.
